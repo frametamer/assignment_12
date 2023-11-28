@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Task Management App</title>
+  <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
+</head>
+<body>
+
+<div id="app">
+  <h1>Task Management App</h1>
+
+  <!-- Form to add new tasks -->
+  <form @submit.prevent="addTask">
+    <label for="taskTitle">Task Title:</label>
+    <input type="text" id="taskTitle" v-model="newTask.title">
+    <label for="taskStatus">Completion Status:</label>
+    <input type="checkbox" id="taskStatus" v-model="newTask.completed">
+    <button type="submit">Add Task</button>
+  </form>
+
+  <!-- Task list -->
+  <h2>Incomplete Tasks</h2>
+  <ul>
+    <li v-for="(task, index) in incompleteTasks" :key="index">
+      <input type="checkbox" v-model="task.completed" @change="updateTask(index)">
+      <span :class="{ 'completed': task.completed }">{{ task.title }}</span>
+    </li>
+  </ul>
+
+  <h2>Completed Tasks</h2>
+  <ul>
+    <li v-for="(task, index) in completedTasks" :key="index">
+      <input type="checkbox" v-model="task.completed" @change="updateTask(index)">
+      <span :class="{ 'completed': task.completed }">{{ task.title }}</span>
+    </li>
+  </ul>
+
+  <!-- Display total completed and incomplete tasks -->
+  <p>Total Incomplete Tasks: {{ incompleteTaskCount }}</p>
+  <p>Total Completed Tasks: {{ completedTaskCount }}</p>
+</div>
+
+<script>
+new Vue({
+  el: '#app',
+  data: {
+    tasks: [
+      { title: 'Task 1', completed: false },
+      { title: 'Task 2', completed: true }
+    ],
+    newTask: {
+      title: '',
+      completed: false
+    }
+  },
+  computed: {
+    incompleteTasks() {
+      return this.tasks.filter(task => !task.completed);
+    },
+    completedTasks() {
+      return this.tasks.filter(task => task.completed);
+    },
+    incompleteTaskCount() {
+      return this.incompleteTasks.length;
+    },
+    completedTaskCount() {
+      return this.completedTasks.length;
+    }
+  },
+  methods: {
+    addTask() {
+      if (this.newTask.title.trim() !== '') {
+        this.tasks.push({ ...this.newTask });
+        this.newTask.title = '';
+        this.newTask.completed = false;
+      }
+    },
+    updateTask(index) {
+      // This method updates the completion status of a task
+      // and logs a message whenever the task list is modified.
+      console.log('Task list modified.');
+    }
+  },
+  watch: {
+    tasks: {
+      handler() {
+        console.log('Task list modified.');
+      },
+      deep: true
+    }
+  },
+  created() {
+    // Fetch initial data or perform setup operations
+    // For example, you can fetch data from an API here.
+  }
+});
+</script>
+
+<style>
+/* Basic styling */
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  margin: 0;
+  padding: 20px;
+  background-color: #00bf72;
+}
+
+h1 {
+  text-align: center;
+  color: #333;
+}
+
+#app {
+  max-width: 600px;
+  margin: 0 auto;
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+form {
+  margin-bottom: 20px;
+}
+
+ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+li {
+  margin-bottom: 10px;
+}
+
+input[type="text"],
+button {
+  padding: 8px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  margin-bottom: 10px;
+}
+
+button {
+  background-color: #4CAF50;
+  color: white;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #45a049;
+}
+
+input[type="checkbox"] {
+  margin-right: 10px;
+}
+
+.completed {
+  text-decoration: line-through;
+  color: #888;
+}
+
+</style>
+
+</body>
+</html>

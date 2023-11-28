@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>User Profile Dashboard</title>
+  <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
+  <style>
+    /* Dark-themed styling */
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  margin: 0;
+  padding: 20px;
+  background-color: #1f1f1f;
+  color: #eee;
+}
+
+h1 {
+  text-align: center;
+  color: #4CAF50;
+}
+
+#app {
+  max-width: 600px;
+  margin: 0 auto;
+  background-color: #333;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+}
+
+button {
+  padding: 12px 24px;
+  font-size: 16px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  color: #fff;
+  background-color: #4CAF50;
+  transition: background-color 0.3s ease;
+}
+
+button:hover {
+  background-color: #45a049;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="date"],
+button {
+  width: calc(100% - 24px);
+  margin-bottom: 15px;
+  padding: 12px;
+  font-size: 16px;
+  border: 1px solid #4CAF50;
+  border-radius: 5px;
+  background-color: #444;
+  color: #eee;
+}
+
+input[type="date"] {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator {
+  color: #eee;
+}
+
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="date"]:focus,
+button:focus {
+  outline: none;
+  border-color: #45a049;
+}
+
+.profile-section {
+  text-align: center;
+}
+
+.profile-section img {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-bottom: 15px;
+  border: 4px solid #4CAF50;
+}
+
+.profile-section h2 {
+  color: #4CAF50;
+  margin-bottom: 5px;
+}
+
+.profile-section p {
+  color: #ccc;
+  margin-bottom: 10px;
+}
+
+  </style>
+</head>
+<body>
+
+<div id="app">
+  <h1>User Profile Dashboard</h1>
+
+  <!-- Display user details -->
+  <div v-if="user">
+    <img :src="user.profilePicture" alt="Profile Picture" style="width: 150px; border-radius: 50%;">
+    <h2>{{ user.name }}</h2>
+    <p>Email: {{ user.email }}</p>
+    <p v-if="user.isAdmin">Welcome, Admin!</p>
+    <p v-else>Welcome, User!</p>
+    <p>Age: {{ userAge }}</p>
+    <button @click="editMode = true">Edit Profile</button>
+  </div>
+
+  <!-- Form to edit user details -->
+  <div v-if="editMode">
+    <label for="name">Name:</label>
+    <input type="text" id="name" v-model="user.name"><br>
+    <label for="email">Email:</label>
+    <input type="email" id="email" v-model="user.email"><br>
+    <label for="birthdate">Birthdate:</label>
+    <input type="date" id="birthdate" v-model="user.birthdate"><br>
+    <label for="profilePic">Profile Picture URL:</label>
+    <input type="text" id="profilePic" v-model="user.profilePicture"><br>
+    <button @click="saveChanges">Save</button>
+  </div>
+</div>
+
+<script>
+new Vue({
+  el: '#app',
+  data: {
+    user: null,
+    editMode: false
+  },
+  computed: {
+    userAge() {
+      if (this.user && this.user.birthdate) {
+        const today = new Date();
+        const birthdate = new Date(this.user.birthdate);
+        const age = today.getFullYear() - birthdate.getFullYear();
+        return age;
+      }
+      return 'N/A';
+    }
+  },
+  methods: {
+    saveChanges() {
+      // Simulating saving changes to backend or updating user data
+      console.log('Changes saved:', this.user);
+      this.editMode = false;
+    },
+    updateUserPicture() {
+      // Simulating an event handler to update user profile picture
+      // This can be linked to an actual upload functionality
+      console.log('Profile picture updated.');
+    }
+  },
+  watch: {
+    user: {
+      handler() {
+        console.log('User details modified.');
+      },
+      deep: true
+    }
+  },
+  created() {
+    // Simulating fetching user data from an API
+    // Replace this with actual API calls to retrieve user information
+    setTimeout(() => {
+      this.user = {
+        name: 'John Doe',
+        email: 'john@example.com',
+        birthdate: '1990-05-15',
+        profilePicture: 'https://via.placeholder.com/150',
+        isAdmin: false
+      };
+    }, 1000); // Simulating delay in fetching data
+  }
+});
+</script>
+
+</body>
+</html>
